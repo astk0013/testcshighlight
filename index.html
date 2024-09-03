@@ -20,6 +20,26 @@
             padding: 10px;
             margin-top: 10px;
             font-size: 14px;
+            position: relative;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .note .highlight-label, .note .note-label {
+            color: #888;
+            font-size: 12px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .note .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 4px 8px;
+            cursor: pointer;
         }
         button {
             width: 100%;
@@ -82,8 +102,26 @@
                     var noteContainer = document.getElementById('note-container');
                     var noteElement = document.createElement('div');
                     noteElement.className = 'note';
-                    noteElement.textContent = `ハイライトしたテキスト: "${selectedRange.toString()}" - メモ: ${note}`;
+                    noteElement.innerHTML = `
+                        <span class="highlight-label">highlight</span>
+                        <div>${selectedRange.toString()}</div>
+                        <span class="note-label">note</span>
+                        <div>${note}</div>
+                        <button class="delete-btn">削除</button>
+                    `;
                     noteContainer.appendChild(noteElement);
+
+                    // 削除ボタンのイベントリスナーを追加
+                    noteElement.querySelector('.delete-btn').addEventListener('click', function() {
+                        if (confirm('このメモを削除してもよろしいですか？')) {
+                            noteElement.remove();
+                            // ハイライトも削除
+                            span.remove();
+                        }
+                    });
+                } else {
+                    // メモが入力されなかった場合、ハイライトを削除
+                    span.remove();
                 }
 
                 selectedRange = null;
