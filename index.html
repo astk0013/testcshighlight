@@ -116,4 +116,54 @@
 
                 // メモタイトルとハイライト内容を追加
                 noteElement.innerHTML = `
-                    <div class="note-title">メモ</div
+                    <div class="note-title">メモ</div>
+                    <span class="highlight-label">highlight</span>
+                    <div>${selectedRange.toString()}</div>
+                `;
+
+                // メモが入力されている場合のみnoteを表示
+                if (note) {
+                    noteElement.innerHTML += `
+                        <span class="note-label">note</span>
+                        <div>${note}</div>
+                    `;
+                }
+
+                // 削除ボタンを追加
+                noteElement.innerHTML += `
+                    <button class="delete-btn">削除</button>
+                `;
+
+                noteContainer.appendChild(noteElement);
+
+                // 削除ボタンのイベントリスナーを追加
+                noteElement.querySelector('.delete-btn').addEventListener('click', function() {
+                    if (confirm('このメモを削除してもよろしいですか？')) {
+                        noteElement.remove();
+                        // ハイライトを元のテキストに戻す
+                        const parent = span.parentNode;
+                        while (span.firstChild) {
+                            parent.insertBefore(span.firstChild, span);
+                        }
+                        parent.removeChild(span);
+                    }
+                });
+
+                selectedRange = null;
+                document.getSelection().removeAllRanges(); // 選択を解除
+            } else {
+                alert('ハイライトするテキストを選択してください。');
+            }
+        });
+
+        // ページ読み込み時にボタンを無効化
+        document.getElementById('highlight-btn').disabled = true;
+
+        // 選択状態が変更されたときのイベントを監視
+        document.addEventListener('selectionchange', function() {
+            handleSelection();
+        });
+    </script>
+
+</body>
+</html>
