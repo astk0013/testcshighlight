@@ -1,7 +1,102 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    <meta charset="UTF-8<!DOCTYPE html>
+<html lang="ja">
+<head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ハイライトとメモのサンプル</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+        }
+        .highlighted {
+            background-color: yellow;
+        }
+        .note-container {
+            margin-top: 20px;
+        }
+        .note {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>記事タイトル</h1>
+    <p id="article">
+        この記事の内容にハイライトを引いて、メモを追加できます。例えば、この部分を選択してハイライトを適用し、メモを追加することができます。修正第三版です。
+    </p>
+    <button id="highlight-btn">ハイライトとメモを追加</button>
+
+    <div class="note-container" id="note-container">
+        <h2>メモ一覧</h2>
+    </div>
+
+    <script>
+        document.getElementById('highlight-btn').addEventListener('click', function() {
+            var selection = window.getSelection();
+            var selectedText = selection.toString();
+
+            // 選択範囲が取得できない場合の処理
+            if (!selectedText) {
+                alert('ハイライトするテキストを選択してください。');
+                return;
+            }
+            
+            // 範囲が正常に取得できた場合
+            var range = selection.getRangeAt(0);
+            var span = document.createElement('span');
+            span.className = 'highlighted';
+            range.surroundContents(span);
+
+            var note = prompt('メモを入力してください:');
+            if (note) {
+                var noteContainer = document.getElementById('note-container');
+                var noteElement = document.createElement('div');
+                noteElement.className = 'note';
+                noteElement.textContent = `ハイライトしたテキスト: "${selectedText}" - メモ: ${note}`;
+                noteContainer.appendChild(noteElement);
+            }
+
+            // 選択範囲をクリア
+            selection.removeAllRanges();
+        });
+
+        document.addEventListener('selectionchange', function() {
+            var selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                // 選択された範囲がある場合、ボタンを有効にする
+                document.getElementById('highlight-btn').disabled = false;
+            } else {
+                // 選択された範囲がない場合、ボタンを無効にする
+                document.getElementById('highlight-btn').disabled = true;
+            }
+        });
+
+        // ページ読み込み時にボタンを無効化
+        document.getElementById('highlight-btn').disabled = true;
+    </script>
+
+</body>
+</html>
+>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ハイライトとメモのサンプル</title>
     <style>
