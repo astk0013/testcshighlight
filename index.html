@@ -15,14 +15,18 @@
         .note-container {
             margin-top: 20px;
         }
+        .note-container h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
         .note {
             border: 1px solid #ddd;
             padding: 10px;
-            margin-top: 10px;
+            margin-bottom: 10px;
             font-size: 14px;
-            position: relative;
             background-color: #f9f9f9;
             border-radius: 4px;
+            position: relative;
         }
         .note .highlight-label, .note .note-label {
             color: #888;
@@ -30,16 +34,22 @@
             display: block;
             margin-bottom: 4px;
         }
+        .note .note-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
         .note .delete-btn {
             position: absolute;
-            top: 10px;
+            bottom: 10px;
             right: 10px;
-            background-color: red;
+            background-color: #888;
             color: white;
             border: none;
             border-radius: 3px;
             padding: 4px 8px;
             cursor: pointer;
+            font-size: 12px;
         }
         button {
             width: 100%;
@@ -58,12 +68,12 @@
 
     <h1>記事タイトル</h1>
     <p id="article">
-        この記事の内容にハイライトを引いて、メモを追加できます。例えば、この部分を選択してハイライトを適用し、メモを追加することができます。
+        この記事の内容にハイライトを引いて、メモを追加できます。例えば、この部分を選択してハイライトを適用し、メモを追加することができます。1613
     </p>
     <button id="highlight-btn">ハイライトとメモを追加</button>
 
     <div class="note-container" id="note-container">
-        <h2>メモ一覧</h2>
+        <h3>メモ一覧</h3>
     </div>
 
     <script>
@@ -103,6 +113,7 @@
                     var noteElement = document.createElement('div');
                     noteElement.className = 'note';
                     noteElement.innerHTML = `
+                        <div class="note-title">メモ 1</div>
                         <span class="highlight-label">highlight</span>
                         <div>${selectedRange.toString()}</div>
                         <span class="note-label">note</span>
@@ -121,7 +132,7 @@
                     });
                 } else {
                     // メモが入力されなかった場合、ハイライトを削除
-                    span.remove();
+                    span.replaceWith(document.createTextNode(span.textContent));
                 }
 
                 selectedRange = null;
