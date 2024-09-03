@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ハイライトとメモのサンプル</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+        }
+        .highlighted {
+            background-color: yellow;
+        }
+        .note-container {
+            margin-top: 20px;
+        }
+        .note {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>記事タイトル</h1>
+    <p id="article">
+        この記事の内容にハイライトを引いて、メモを追加できます。例えば、この部分を選択してハイライトを適用し、メモを追加することができます。
+    </p>
+    <button id="highlight-btn">ハイライトとメモを追加</button>
+
+    <div class="note-container" id="note-container">
+        <h2>メモ一覧</h2>
+    </div>
+
+    <script>
+        document.getElementById('highlight-btn').addEventListener('click', function() {
+            var selectedText = window.getSelection().toString();
+            if (selectedText) {
+                var span = document.createElement('span');
+                span.className = 'highlighted';
+                var range = window.getSelection().getRangeAt(0);
+                range.surroundContents(span);
+
+                var note = prompt('メモを入力してください:');
+                if (note) {
+                    var noteContainer = document.getElementById('note-container');
+                    var noteElement = document.createElement('div');
+                    noteElement.className = 'note';
+                    noteElement.textContent = `ハイライトしたテキスト: "${selectedText}" - メモ: ${note}`;
+                    noteContainer.appendChild(noteElement);
+                }
+            } else {
+                alert('ハイライトするテキストを選択してください。');
+            }
+        });
+    </script>
+
+</body>
+</html>
