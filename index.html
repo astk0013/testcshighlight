@@ -38,7 +38,7 @@
 
     <h1>記事タイトル</h1>
     <p id="article">
-        この記事の内容にハイライトを引いて、メモを追加できます。例えば、この部分を選択してハイライトを適用し、メモを追加することができます。3
+        この記事の内容にハイライトを引いて、メモを追加できます。例えば、この部分を選択してハイライトを適用し、メモを追加することができます。４
     </p>
     <button id="highlight-btn">ハイライトとメモを追加</button>
 
@@ -47,48 +47,63 @@
     </div>
 
     <script>
+        // 選択状態を確認する関数
+        function isTextSelected() {
+            var selection = window.getSelection();
+            return selection && selection.toString().length > 0;
+        }
+
         document.getElementById('highlight-btn').addEventListener('click', function() {
-            var selection = window.getSelection();
-            var selectedText = selection.toString();
+            if (isTextSelected()) {
+                var selection = window.getSelection();
+                var range = selection.getRangeAt(0).cloneRange();
 
-            // 選択範囲が取得できない場合の処理
-            if (!selectedText) {
-                alert('ハイライトするテキストを選択してください。');
-                return;
-            }
-            
-            // 範囲が正常に取得できた場合
-            var range = selection.getRangeAt(0);
-            var span = document.createElement('span');
-            span.className = 'highlighted';
-            range.surroundContents(span);
+                // テキストを囲むためのspanタグを作成
+                var span = document.createElement('span');
+                span.className = 'highlighted';
 
-            var note = prompt('メモを入力してください:');
-            if (note) {
-                var noteContainer = document.getElementById('note-container');
-                var noteElement = document.createElement('div');
-                noteElement.className = 'note';
-                noteElement.textContent = `ハイライトしたテキスト: "${selectedText}" - メモ: ${note}`;
-                noteContainer.appendChild(noteElement);
-            }
+                // 選択範囲をspanタグで囲む
+                range.surroundContents(span);
 
-            // 選択範囲をクリア
-            selection.removeAllRanges();
-        });
+                // メモを入力させる
+                var note = prompt('メモを入力してください:');
+                if (note) {
+                    var noteContainer = document.getElementById('note-container');
+                    var noteElement = document.createElement('div');
+                    noteElement.className = 'note';
+                    noteElement.textContent = `ハイライトしたテキスト: "${selection.toString()}" - メモ: ${note}`;
+                    noteContainer.appendChild(noteElement);
+                }
 
-        document.addEventListener('selectionchange', function() {
-            var selection = window.getSelection();
-            if (selection.rangeCount > 0) {
-                // 選択された範囲がある場合、ボタンを有効にする
-                document.getElementById('highlight-btn').disabled = false;
+                // 選択範囲をクリア
+                selection.removeAllRanges();
             } else {
-                // 選択された範囲がない場合、ボタンを無効にする
-                document.getElementById('highlight-btn').disabled = true;
+                alert('ハイライトするテキストを選択してください。');
             }
         });
 
-        // ページ読み込み時にボタンを無効化
+        // タッチイベントの追加（iOS用）
+        document.getElementById('article').addEventListener('touchend', function() {
+            var highlightBtn = document.getElementById('highlight-btn');
+            if (isTextSelected()) {
+                highlightBtn.disabled = false;
+            } else {
+                highlightBtn.disabled = true;
+            }
+        });
+
+        // 初期状態ではボタンを無効化
         document.getElementById('highlight-btn').disabled = true;
+
+        // 選択状態が変更されたときのイベントを監視
+        document.addEventListener('selectionchange', function() {
+            var highlightBtn = document.getElementById('highlight-btn');
+            if (isTextSelected()) {
+                highlightBtn.disabled = false;
+            } else {
+                highlightBtn.disabled = true;
+            }
+        });
     </script>
 
 </body>
