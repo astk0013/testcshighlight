@@ -48,13 +48,22 @@
 
     <script>
         document.getElementById('highlight-btn').addEventListener('click', function() {
-            var selectedText = window.getSelection().toString();
+            var selection = window.getSelection();
+            var selectedText = selection.toString();
+            
             if (selectedText) {
+                var range = selection.getRangeAt(0).cloneRange();
+
+                // テキストを囲むためのspanタグを作成
                 var span = document.createElement('span');
                 span.className = 'highlighted';
-                var range = window.getSelection().getRangeAt(0);
-                range.surroundContents(span);
 
+                // 選択範囲をspanタグで囲む
+                range.surroundContents(span);
+                selection.removeAllRanges();
+                selection.addRange(range);
+
+                // メモを入力させる
                 var note = prompt('メモを入力してください:');
                 if (note) {
                     var noteContainer = document.getElementById('note-container');
@@ -71,3 +80,4 @@
 
 </body>
 </html>
+
