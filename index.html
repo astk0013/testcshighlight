@@ -40,9 +40,8 @@
             font-size: 14px;
         }
         .note .delete-btn {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
+            display: block;
+            margin: 10px auto 0;
             background-color: #888;
             color: white;
             border: none;
@@ -50,6 +49,7 @@
             padding: 4px 8px;
             cursor: pointer;
             font-size: 12px;
+            width: 50px;
         }
         button {
             width: 100%;
@@ -68,7 +68,7 @@
 
     <h1>記事タイトル</h1>
     <p id="article">
-        この記事の内容にハイライトを引いて、メモを追加できます。例えば、この部分を選択してハイライトを適用し、メモを追加することができます。1613
+        この記事の内容にハイライトを引いて、メモを追加できます。例えば、この部分を選択してハイライトを適用し、メモを追加することができます。
     </p>
     <button id="highlight-btn">ハイライトとメモを追加</button>
 
@@ -108,32 +108,42 @@
                 selectedRange.surroundContents(span);
 
                 var note = prompt('メモを入力してください:');
+
+                // メモコンテナを作成
+                var noteContainer = document.getElementById('note-container');
+                var noteElement = document.createElement('div');
+                noteElement.className = 'note';
+
+                // メモタイトルとハイライト内容を追加
+                noteElement.innerHTML = `
+                    <div class="note-title">メモ</div>
+                    <span class="highlight-label">highlight</span>
+                    <div>${selectedRange.toString()}</div>
+                `;
+
+                // メモが入力されている場合のみnoteを表示
                 if (note) {
-                    var noteContainer = document.getElementById('note-container');
-                    var noteElement = document.createElement('div');
-                    noteElement.className = 'note';
-                    noteElement.innerHTML = `
-                        <div class="note-title">メモ 1</div>
-                        <span class="highlight-label">highlight</span>
-                        <div>${selectedRange.toString()}</div>
+                    noteElement.innerHTML += `
                         <span class="note-label">note</span>
                         <div>${note}</div>
-                        <button class="delete-btn">削除</button>
                     `;
-                    noteContainer.appendChild(noteElement);
-
-                    // 削除ボタンのイベントリスナーを追加
-                    noteElement.querySelector('.delete-btn').addEventListener('click', function() {
-                        if (confirm('このメモを削除してもよろしいですか？')) {
-                            noteElement.remove();
-                            // ハイライトも削除
-                            span.remove();
-                        }
-                    });
-                } else {
-                    // メモが入力されなかった場合、ハイライトを削除
-                    span.replaceWith(document.createTextNode(span.textContent));
                 }
+
+                // 削除ボタンを追加
+                noteElement.innerHTML += `
+                    <button class="delete-btn">削除</button>
+                `;
+
+                noteContainer.appendChild(noteElement);
+
+                // 削除ボタンのイベントリスナーを追加
+                noteElement.querySelector('.delete-btn').addEventListener('click', function() {
+                    if (confirm('このメモを削除してもよろしいですか？')) {
+                        noteElement.remove();
+                        // ハイライトも削除
+                        span.remove();
+                    }
+                });
 
                 selectedRange = null;
                 document.getSelection().removeAllRanges(); // 選択を解除
